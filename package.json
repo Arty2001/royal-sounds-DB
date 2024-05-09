@@ -1,0 +1,29 @@
+{
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@emailjs/browser": "^4.3.3",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mantine/core": "^7.9.1",
+    "@mantine/hooks": "^7.9.1",
+    "@mui/material": "^5.15.17",
+    "@mui/x-date-pickers": "^7.3.2",
+    "@tabler/icons-react": "^3.3.0",
+    "dayjs": "^1.11.11",
+    "framer-motion": "^11.1.9",
+    "mongodb": "^6.5.0",
+    "next": "latest",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "18.7.5",
+    "@types/react": "^18.0.0",
+    "typescript": "4.6.3"
+  }
+}
