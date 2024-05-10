@@ -153,24 +153,24 @@ export default function QuoteRequestForm() {
   );
 
   const outerTheme = useTheme();
-  const [message, setMessage] = React.useState<string | null>();
-  const [name, setName] = React.useState<string | null>();
-  const [address, setAddress] = React.useState<string | null>();
-  const [phoneNumber, setPhoneNumber] = React.useState<string | null>();
-  const [emailAddress, setEmailAddress] = React.useState<string | null>();
-  const [send, setSend] = React.useState<string | null>("SEND");
+  const [message, setMessage] = React.useState<string|null >();
+  const [name, setName] = React.useState<string >('');
+  const [address, setAddress] = React.useState<string >('');
+  const [phoneNumber, setPhoneNumber] = React.useState<string >('');
+  const [emailAddress, setEmailAddress] = React.useState<string >('');
+  const [send, setSend] = React.useState<string >("SEND");
 
-  const [eventType, setEventType] = React.useState<string | undefined>();
-  const [venueLocation, setVenueLocation] = React.useState<string | null>();
+  const [eventType, setEventType] = React.useState<string>('');
+  const [venueLocation, setVenueLocation] = React.useState<string>('');
 
   const [eventDescription, setEventDescription] = React.useState<
-    string | undefined
-  >();
+    string
+  >('');
 
   const [sendStatus, setSendStatus] = React.useState<boolean>(false);
 
-  const [dateTime, setDateTime] = React.useState<Dayjs | null>(dayjs());
-  const [endDateTime, setEndDateTime] = React.useState<Dayjs | null>(dayjs());
+  const [dateTime, setDateTime] = React.useState<Dayjs>(dayjs());
+  const [endDateTime, setEndDateTime] = React.useState<Dayjs>(dayjs());
 
   const [speaker, setSpeaker] = React.useState(true);
   const [BL, setBL] = React.useState(true);
@@ -180,6 +180,74 @@ export default function QuoteRequestForm() {
   const [projector, setProjector] = React.useState(false);
   const [MC, setMC] = React.useState(false);
   const [photobooth, setPhotobooth] = React.useState(false);
+
+  interface Quote {
+    name: string;
+    homeAddress: string;
+    phoneNumber: string;
+    emailAddress: string;
+    eventType: string;
+    venueLocation: string;
+    eventDate: string;
+    eventStartTime: string;
+    eventEndTime: string;
+    eventDescription: string;
+    extras: {
+      speakers: number;
+      basicLighting: number;
+      dryIce: number;
+      DMXLighting: number;
+      sparklers: number;
+      projectors: number;
+      MC: number;
+      photoBooth: number;
+    };
+  }
+
+  async function sendtoDataBase(){
+    const quote : Quote={
+      name: name,
+      homeAddress:address,
+      phoneNumber:phoneNumber,
+      emailAddress:emailAddress,
+      eventType:eventType,
+      venueLocation:venueLocation,
+      eventDate: dateTime?.format("DD/MM/YYYY"),
+      eventStartTime: dateTime?.format("HH:MM"),
+      eventEndTime:endDateTime?.format("HH:MM"),
+      eventDescription,
+      extras:{
+        speakers: speaker ? 1:0,
+        basicLighting: BL ? 1:0,
+        dryIce: DI ? 1:0,
+        DMXLighting: DL ? 1:0,
+        sparklers: sparkler? 1:0,
+        projectors: projector?1:0,
+        MC: MC?1:0,
+        photoBooth: photobooth?1:0,
+      }
+    }
+    try {
+      const response = await fetch('/api/quotes', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(quote),
+      });
+  
+      if (!response.ok) {
+        const errorMessage = `Error: ${response.status} - ${response.statusText}`;
+        throw new Error(errorMessage);
+      }
+  
+      const data = await response.json();
+      console.log('Quote added successfully:', data);
+    } catch (error) {
+      console.error('Error posting quote:', error);
+    }
+  
+  }
 
   React.useEffect(() => {
     setMessage(null);
@@ -212,19 +280,19 @@ export default function QuoteRequestForm() {
     let extrasHtml = " ";
 
     if (
-      !name ||
-      !eventDescription ||
-      !dateTime ||
-      !address ||
-      !phoneNumber ||
-      !emailAddress ||
-      !eventType ||
-      !venueLocation
+      name.trim() === '' ||
+  eventDescription.trim() === '' ||
+  address.trim() === '' ||
+  phoneNumber.trim() === '' ||
+  emailAddress.trim() === '' ||
+  eventType.trim() === '' ||
+  venueLocation.trim() === ''
     ) {
       setMessage("FILL ALL FIELDS !");
       return;
     }
 
+    sendtoDataBase();
     setSend("SENDING...");
 
     if (speaker) extrasHtml += "<li>Speakers</li>";
@@ -514,7 +582,7 @@ export default function QuoteRequestForm() {
                     }}
                     label="Event Date"
                     value={dateTime}
-                    onChange={(newValue) => setDateTime(newValue)}
+                    onChange={(newValue: Dayjs | null) => newValue && setDateTime(newValue)}
                   />
                 </div>
                 <div
@@ -531,7 +599,7 @@ export default function QuoteRequestForm() {
                     }}
                     label="Event Start Time"
                     value={dateTime}
-                    onChange={(newValue) => setDateTime(newValue)}
+                    onChange={(newValue:Dayjs|null) => newValue && setDateTime(newValue)}
                   />
                   <TimePicker
                     slotProps={{
@@ -539,7 +607,7 @@ export default function QuoteRequestForm() {
                     }}
                     label="Event End Time"
                     value={endDateTime}
-                    onChange={(newValue) => setEndDateTime(newValue)}
+                    onChange={(newValue:Dayjs|null) => newValue && setEndDateTime(newValue)}
                   />
                 </div>
                 <div style={{ display: "flex", width: "100%", marginTop: 5 }}>

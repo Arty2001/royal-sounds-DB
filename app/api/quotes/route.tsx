@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
     // Validate extras object
     const extras = data['extras'];
     const extraKeys = Object.keys(extras);
-    const validExtraKeys = ['speakers', 'basicLighting', 'dryIce', 'DMXLighting', 'Sparklers', 'Projectors', 'MC', 'PhotoBooth'];
+    const validExtraKeys = ['speakers', 'basicLighting', 'dryIce', 'DMXLighting', 'sparklers', 'projectors', 'MC', 'photoBooth'];
     const invalidExtraKeys = extraKeys.filter(key => !validExtraKeys.includes(key));
     if (invalidExtraKeys.length > 0) {
       return NextResponse.json({ message: `Invalid extra keys: ${invalidExtraKeys.join(', ')}` }, { status: 400 });
