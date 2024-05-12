@@ -1,11 +1,11 @@
 import NextAuth, {
     getServerSession,
-    type NextAuthOptions,
+    NextAuthOptions,
   } from "next-auth";
   import Credentials from "next-auth/providers/credentials";
   import { userService } from "./services/userService";
   
-  export const authOptions: NextAuthOptions = {
+  const authOptions: NextAuthOptions = {
     session: {
       strategy: "jwt", //(1) the default is jwt when no adapter defined, we redefined here to make it obvious what strategy that we use 
     },
@@ -35,7 +35,7 @@ import NextAuth, {
           username: { label: "Username", type: "text", placeholder: "username" },
           password: { label: "Password", type: "password" }
         },
-        async authorize(credentials, req) {
+        authorize(credentials, req) {
            const { username, password } = credentials as {
             username: string
             password: string
@@ -47,8 +47,6 @@ import NextAuth, {
     ],
   };
   
-  export const getServerAuthSession = () => getServerSession(authOptions); //(6)
-
   const handler = NextAuth(authOptions);
     
   export { handler as GET, handler as POST };
