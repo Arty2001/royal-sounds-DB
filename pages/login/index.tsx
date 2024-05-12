@@ -1,12 +1,11 @@
+"use client";
+
 import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Link from '@mui/material/Link';
-import Grid from '@mui/material/Grid';
+import { SessionProvider, signIn } from "next-auth/react";
 import Box from '@mui/material/Box';
 import {IconLockAccess} from '@tabler/icons-react';
 import Typography from '@mui/material/Typography';
@@ -16,19 +15,6 @@ import { Nunito } from 'next/font/google';
 
 const nunito = Nunito({weight:["400"],subsets:["latin"]}) 
 
-
-function Copyright(props: any) {
-  return (
-    <Typography variant="body2" color="text.secondary" align="center" {...props}>
-      {'Copyright © '}
-      <Link color="inherit" href="https://mui.com/">
-        Your Website
-      </Link>{' '}
-      {new Date().getFullYear()}
-      {'.'}
-    </Typography>
-  );
-}
 
 // TODO remove, this demo shouldn't need to reset the theme.
 const defaultTheme = createTheme({
@@ -102,16 +88,22 @@ const defaultTheme = createTheme({
   });
 
 export default function SignIn() {
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     console.log({
       email: data.get('email'),
       password: data.get('password'),
     });
+    await signIn("credentials",{
+      username: data.get('email'),
+      password: data.get('password'),
+      callbackUrl:"/dashboard",
+    })
   };
 
   return (
+    <SessionProvider>
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
@@ -162,5 +154,6 @@ export default function SignIn() {
         </Box>
       </Container>
     </ThemeProvider>
+    </SessionProvider>
   );
 }

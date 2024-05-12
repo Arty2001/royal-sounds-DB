@@ -8,6 +8,8 @@ import { useMediaQuery } from "@mantine/hooks";
 import { AnimatePresence, motion } from "framer-motion";
 import React, { useState } from "react";
 import QuoteRequestForm from "../components/QuoteRequestForm";
+import { SessionProvider } from "next-auth/react";
+import Link from "next/link";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -68,6 +70,7 @@ function App() {
             paddingBottom: 20,
           }}
         >
+          <Link href={"/login"}>
           <Image
             priority
             src="/logo.png"
@@ -75,6 +78,7 @@ function App() {
             width={150}
             alt="Follow us on Twitter"
           />
+          </Link>
         </div>
         <div style={{ width: "100%", height: "100%" }}>
           <AnimatePresence>
